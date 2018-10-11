@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="MovieAPIKey"></string>
+
+    <string name="no_internet_error_message">No internet connection</string>
+    <string name="list_loading_error_message">Error loading movies</string>
+    <string name="individual_movie_error_message">Error loading this movie</string>
+
+    <string name="rating_label">Rating</string>
+    <string name="release_date_label">Release Date</string>
+
+    <string name="MovieParcelableKey">movie</string>
+    <string name="MovieListParcelableKey">movie_list</string>
+
+    <string name="movie_picture_content_description">movie poster</string>
+
+    <string name="Key_FilterTypeSharedPreferences">filter</string>
+    <string name="FilterTypeForSharedPreferences_Popular">popular</string>
+    <string name="FilterTypeForSharedPreferences_TopRated">toprated</string>
+</resources>
