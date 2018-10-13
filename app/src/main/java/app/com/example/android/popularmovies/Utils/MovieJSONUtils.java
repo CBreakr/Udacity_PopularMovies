@@ -3,6 +3,7 @@ package app.com.example.android.popularmovies.Utils;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -10,7 +11,9 @@ import java.util.List;
 
 import app.com.example.android.popularmovies.Model.MovieInfo;
 
-public class MovieJSONUtils {
+public final class MovieJSONUtils {
+
+    private static final String TAG = MovieJSONUtils.class.getSimpleName();
 
     private static final String JSON_ERROR_STATUS_CODE = "status_code";
     private static final String JSON_MAIN_LIST = "results";
@@ -21,6 +24,10 @@ public class MovieJSONUtils {
     private static final String JSON_MOVIE_RATING = "vote_average";
     private static final String JSON_MOVIE_RELEASE = "release_date";
 
+    private MovieJSONUtils(){
+
+    }
+
     public static MovieInfo parseMovieFromJSON(String json){
         try {
             JSONObject jo = new JSONObject(json);
@@ -28,8 +35,9 @@ public class MovieJSONUtils {
                 return createMovieFromJSONObject(jo);
             }
         }
-        catch (Exception ex){
-
+        catch (JSONException jx){
+            Log.e(TAG, "Error in parcing individual movie");
+            jx.printStackTrace();
         }
 
         return null;
@@ -56,8 +64,9 @@ public class MovieJSONUtils {
                 }
             }
         }
-        catch(Exception ex){
-
+        catch(JSONException jx){
+            Log.e(TAG, "");
+            jx.printStackTrace();
         }
 
         return null;

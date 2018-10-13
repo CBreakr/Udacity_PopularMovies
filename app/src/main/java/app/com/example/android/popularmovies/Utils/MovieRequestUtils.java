@@ -9,7 +9,11 @@ import java.util.List;
 import app.com.example.android.popularmovies.Model.MovieInfo;
 import app.com.example.android.popularmovies.R;
 
-public class MovieRequestUtils {
+public final class MovieRequestUtils {
+
+    private MovieRequestUtils(){
+
+    }
 
     public static List<MovieInfo> requestPopularMovies(Context context){
         String api_key = context.getResources().getString(R.string.MovieAPIKey);

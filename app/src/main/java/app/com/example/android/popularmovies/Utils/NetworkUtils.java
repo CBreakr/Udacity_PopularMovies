@@ -14,12 +14,18 @@ import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class NetworkUtils {
+public final class NetworkUtils {
+
+    private NetworkUtils(){
+
+    }
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String API_BASEURL_INDIVIDUAL = "https://api.themoviedb.org/3/movie/";
-    private static final String API_BASEURL_LIST = "https://api.themoviedb.org/3/discover/movie";
+    private static final String API_BASEURL_LIST = "https://api.themoviedb.org/3/movie/";
+
+    private static final String API_POPULAR_EXTENSION = "popular";
+    private static final String API_TOPRATED_EXTENSION = "top_rated";
 
     private static final String API_KEY = "api_key";
     private static final String API_LANGUAGE = "language";
@@ -34,22 +40,6 @@ public class NetworkUtils {
     private static final String PAGE_QUERY_VALUE_DEFAULT = "1";
 
     /*
-    INDIVIDUAL:
-    https://api.themoviedb.org/3/movie/
-    {movie_id}
-    ?api_key=<<api_key>>
-    &language=en-US
-    */
-    public static URL buildIndividualMovieRequestURL(String movieId, String key){
-        Uri builtUri = Uri.parse(API_BASEURL_INDIVIDUAL + movieId).buildUpon()
-                .appendQueryParameter(API_KEY, key)
-                .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
-                .build();
-
-        return createURLFromUri(builtUri);
-    }
-
-    /*
     LIST:
     https://api.themoviedb.org/3/discover/movie
     ?api_key=25c4095aa59cd1e69e38e9933640ce6b
@@ -60,7 +50,7 @@ public class NetworkUtils {
     &page=1
     */
     public static URL buildPopularMoviesRequestURL(String key){
-        Uri builtUri = Uri.parse(API_BASEURL_LIST).buildUpon()
+        Uri builtUri = Uri.parse(API_BASEURL_LIST + API_POPULAR_EXTENSION).buildUpon()
                 .appendQueryParameter(API_KEY, key)
                 .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
                 .appendQueryParameter(API_SORT_BY, SORT_BY_QUERY_VALUE_POPULARITY)
@@ -73,7 +63,7 @@ public class NetworkUtils {
     }
 
     public static URL buildTopRatedMoviesRequestURL(String key){
-        Uri builtUri = Uri.parse(API_BASEURL_LIST).buildUpon()
+        Uri builtUri = Uri.parse(API_BASEURL_LIST + API_TOPRATED_EXTENSION).buildUpon()
                 .appendQueryParameter(API_KEY, key)
                 .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
                 .appendQueryParameter(API_SORT_BY, SORT_BY_QUERY_VALUE_TOP_RATED)
@@ -101,8 +91,8 @@ public class NetworkUtils {
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            urlConnection.setConnectTimeout(15000);
-            urlConnection.setReadTimeout(15000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(5000);
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);

@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         showMovieDisplay(savedInstanceState);
     }
 
+    //
+    // SAVE INSTANCE
+    // we'll refer to this within the onCreate function
+    //
     @Override
     public void onSaveInstanceState(Bundle outState){
         String listKey = this.getString(R.string.MovieListParcelableKey);
