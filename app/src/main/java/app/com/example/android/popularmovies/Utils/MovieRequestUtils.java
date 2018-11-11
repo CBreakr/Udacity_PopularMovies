@@ -1,12 +1,15 @@
 package app.com.example.android.popularmovies.Utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.net.URL;
 import java.util.List;
 
-import app.com.example.android.popularmovies.Model.MovieInfo;
+import app.com.example.android.popularmovies.Database.MovieInfo;
+import app.com.example.android.popularmovies.Database.MovieReview;
+import app.com.example.android.popularmovies.Database.MovieTrailer;
+import app.com.example.android.popularmovies.Database.ReviewListConverter;
+import app.com.example.android.popularmovies.Database.TrailerListConverter;
 import app.com.example.android.popularmovies.R;
 
 public final class MovieRequestUtils {
@@ -32,6 +35,32 @@ public final class MovieRequestUtils {
         try{
             String json = NetworkUtils.getResponseFromHttpUrl(url);
             return MovieJSONUtils.parseMovieListFromJSON(json);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<MovieTrailer> getListOfTrailersForMovie(Context context, String movieID){
+        String api_key = context.getResources().getString(R.string.MovieAPIKey);
+        URL url = NetworkUtils.buildMovieTrailersURL(api_key, movieID);
+        try{
+            String json = NetworkUtils.getResponseFromHttpUrl(url);
+            return MovieJSONUtils.parseMovieTrailerListFromJSON(json);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<MovieReview> getListOfReviewsForMovie(Context context, String movieID){
+        String api_key = context.getResources().getString(R.string.MovieAPIKey);
+        URL url = NetworkUtils.buildMovieReviewsURL(api_key, movieID);
+        try{
+            String json = NetworkUtils.getResponseFromHttpUrl(url);
+            return MovieJSONUtils.parseMovieReviewListFromJSON(json);
         }
         catch(Exception ex){
             ex.printStackTrace();

@@ -13,4 +13,13 @@
         android:contentDescription="@string/movie_picture_content_description"
         android:scaleType="centerCrop" />
 
+    <TextView
+        android:id="@+id/tv_error_title_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        />
+
 </GridLayout>

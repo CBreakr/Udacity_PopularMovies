@@ -17,4 +17,10 @@
         app:showAsAction="never"
         />
 
+    <item
+        android:id="@+id/favorite_sort"
+        android:title="@string/favorite_menu_filter_label"
+        app:showAsAction="never"
+        />
+
 </menu>

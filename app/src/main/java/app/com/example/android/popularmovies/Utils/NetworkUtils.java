@@ -26,6 +26,9 @@ public final class NetworkUtils {
 
     private static final String API_POPULAR_EXTENSION = "popular";
     private static final String API_TOPRATED_EXTENSION = "top_rated";
+    private static final String API_TRAILERS_EXTENSION = "/videos";
+    private static final String API_REVIEWS_EXTENSION = "/reviews";
+
 
     private static final String API_KEY = "api_key";
     private static final String API_LANGUAGE = "language";
@@ -70,6 +73,36 @@ public final class NetworkUtils {
                 .appendQueryParameter(API_INCLUDE_ADULT, "false")
                 .appendQueryParameter(API_INCLUDE_VIDEO, "false")
                 .appendQueryParameter(API_PAGE, PAGE_QUERY_VALUE_DEFAULT)
+                .build();
+
+        return createURLFromUri(builtUri);
+    }
+
+    /*
+    https://api.themoviedb.org/3/movie/
+    <<ID>>/videos
+    ?api_key=<<API_KEY>>
+    &language=en-US
+     */
+    public static URL buildMovieTrailersURL(String key, String movieID){
+        Uri builtUri = Uri.parse(API_BASEURL_LIST + movieID + API_TRAILERS_EXTENSION).buildUpon()
+                .appendQueryParameter(API_KEY, key)
+                .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
+                .build();
+
+        return createURLFromUri(builtUri);
+    }
+
+    /*
+    https://api.themoviedb.org/3/movie/
+    <<ID>>/reviews
+    ?api_key=<<API_KEY>>
+    &language=en-US
+     */
+    public static URL buildMovieReviewsURL(String key, String movieID){
+        Uri builtUri = Uri.parse(API_BASEURL_LIST + movieID + API_REVIEWS_EXTENSION).buildUpon()
+                .appendQueryParameter(API_KEY, key)
+                .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
                 .build();
 
         return createURLFromUri(builtUri);

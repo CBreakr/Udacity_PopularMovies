@@ -1,14 +1,19 @@
 package app.com.example.android.popularmovies;
 
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,20 +27,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.com.example.android.popularmovies.Model.MovieInfo;
+import app.com.example.android.popularmovies.Database.AppDatabase;
+import app.com.example.android.popularmovies.Database.MovieInfo;
+import app.com.example.android.popularmovies.Utils.FilterUtils;
 import app.com.example.android.popularmovies.Utils.MovieRequestUtils;
+import app.com.example.android.popularmovies.ViewModel.MainViewModel;
+import app.com.example.android.popularmovies.ViewModel.MovieAPIViewModel;
+import app.com.example.android.popularmovies.ViewModel.MovieViewModel;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
-    // TODO maintain sorting between activities
-    // I'd like to avoid the reloading and saved scrolling, but I'm really not sure how to do that
-    // just use the sharedPreferences to pass the filter type
-
-    // TODO comment the code
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
 
-    private final int fNumberOfColumns = 2;
+    private final int PORTRAIT_NumberOfColumns = 2;
+    private final int LANDSCAPE_NumberOfColumns = 4;
 
     private MovieAdapter mMovieAdapter;
 
@@ -44,12 +51,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private ProgressBar mProgressBar;
 
-    public enum FilterType {
-        Popular,
-        TopRated
-    }
+    protected FilterUtils.FilterType mFilterToUse;
 
-    protected FilterType mFilterToUse;
+    private AppDatabase mDB;
+    private MainViewModel mViewModel;
 
     /*
     There's clearly a lot of clean up and documentation left to do, but I'm honestly not entirely
@@ -61,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setFilterType(null);
+        FilterUtils.setFilterType(null, this);
+        mFilterToUse = FilterUtils.getFilterTypeFromSharedPreferences(this);
 
         initializeUI();
         showMovieDisplay(savedInstanceState);
@@ -84,9 +90,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mErrorMessageTextView = findViewById(R.id.tv_error_message_display);
         mProgressBar = findViewById(R.id.pb_loading_indicator);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, fNumberOfColumns);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, PORTRAIT_NumberOfColumns));
+        }
+        else{
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, LANDSCAPE_NumberOfColumns));
+        }
 
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
@@ -96,8 +105,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     protected void showDataView(){
-        mErrorMessageTextView.setVisibility(View.INVISIBLE);
-        mInternetErrorTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageTextView.setVisibility(View.GONE);
+        mInternetErrorTextView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -132,12 +141,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         // if we already have it, then no need to make a call to the API
         String listKey = this.getString(R.string.MovieListParcelableKey);
         if(savedInstanceState == null || !savedInstanceState.containsKey(listKey)) {
-            new InternetCheckThenFetchTask().execute();
+            if(FilterUtils.isFavoriteMode(this)){
+                setupViewModel();
+            }
+            else{
+                new InternetCheckThenFetchTask().execute();
+            }
         }
         else{
             List<MovieInfo> movies = savedInstanceState.<MovieInfo>getParcelableArrayList(listKey);
             mMovieAdapter.setMovieList(movies);
         }
+    }
+
+    private void setupViewModel(){
+        mDB = AppDatabase.getInstance(this);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.getMovies().observe(this, new Observer<List<MovieInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieInfo> movieEntries) {
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                mMovieAdapter.setMovieList(movieEntries);
+            }
+        });
     }
 
     private void switchToIndividualMovieActivity(MovieInfo movie){
@@ -171,17 +197,37 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         int id = item.getItemId();
 
         if (id == R.id.popular_sort) {
-            setFilterType(FilterType.Popular);
+            FilterUtils.setFilterType(FilterUtils.FilterType.Popular, this);
+            mFilterToUse = FilterUtils.FilterType.Popular;
+
+            disconnectPotentialViewModelObserver();
+
             showMovieDisplay(null);
             return true;
         }
         else if(id == R.id.top_rated_sort){
-            setFilterType(FilterType.TopRated);
+            FilterUtils.setFilterType(FilterUtils.FilterType.TopRated, this);
+            mFilterToUse = FilterUtils.FilterType.TopRated;
+
+            disconnectPotentialViewModelObserver();
+
+            showMovieDisplay(null);
+            return true;
+        }
+        else if(id == R.id.favorite_sort){
+            FilterUtils.setFilterType(FilterUtils.FilterType.Favorite, this);
+            mFilterToUse = FilterUtils.FilterType.Favorite;
             showMovieDisplay(null);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void disconnectPotentialViewModelObserver(){
+        if(mViewModel != null && mViewModel.getMovies().hasObservers()){
+            mViewModel.getMovies().removeObservers(this);
+        }
     }
 
     //
@@ -195,111 +241,38 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             showLoadingIndicator();
         }
 
-        @Override protected Boolean doInBackground(Void... voids) { try {
-            Socket sock = new Socket();
-            sock.connect(new InetSocketAddress("8.8.8.8", 53), 1500);
-            sock.close();
-            return true;
-        } catch (IOException e) { return false; } }
+        @Override protected Boolean doInBackground(Void... voids) {
+            try {
+                Socket sock = new Socket();
+                sock.connect(new InetSocketAddress("8.8.8.8", 53), 1500);
+                sock.close();
+                return true;
+            }
+            catch (IOException e) {
+                // TODO favorite mode
+                // if we're in favorites mode, attempt to get the data from the DB
+                return false;
+            }
+        }
 
         @Override protected void onPostExecute(Boolean internet) {
             if(internet){
-                new FetchMoviesTask(mFilterToUse).execute();
+//                new FetchMoviesTask(mFilterToUse).execute();
+                final MovieAPIViewModel model =
+                        ViewModelProviders.of(MainActivity.this).get(MovieAPIViewModel.class);
+                model.getData().observe(MainActivity.this, new Observer<List<MovieInfo>>() {
+                    @Override
+                    public void onChanged(@Nullable List<MovieInfo> movieEntries) {
+                        model.getData().removeObservers(MainActivity.this);
+                        hideLoadingIndicator();
+                        fillUI(movieEntries);
+                    }
+                });
             }
             else{
                 hideLoadingIndicator();
                 showInternetError();
             }
         }
-    }
-
-    //
-    // ASYNC TASK
-    //
-    // the input type doesn't matter
-    class FetchMoviesTask extends AsyncTask<Void, Void, List<MovieInfo>> {
-
-        FilterType filter;
-
-        public FetchMoviesTask(FilterType ft) {
-            super();
-            filter = ft;
-        }
-
-        @Override
-        protected List<MovieInfo> doInBackground(Void... voids) {
-            switch(filter){
-                case Popular:
-                    return MovieRequestUtils.requestPopularMovies(MainActivity.this);
-                case TopRated:
-                    return MovieRequestUtils.requestTopRatedMovies(MainActivity.this);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(List<MovieInfo> movies) {
-            super.onPostExecute(movies);
-            hideLoadingIndicator();
-            fillUI(movies);
-        }
-    }
-
-    //
-    // SHARED PREFERENCES
-    //
-    protected void setFilterType(FilterType ft){
-        if(ft == null){
-            ft = getFilterTypeFromSharedPreferences();
-        }
-
-        mFilterToUse = ft;
-        writeFilterTypeToSharedPreferences(mFilterToUse);
-    }
-
-    protected FilterType getFilterTypeFromSharedPreferences(){
-        SharedPreferences pref = this.getPreferences(Context.MODE_PRIVATE);
-        String filter =
-                pref.getString(this.getString(R.string.Key_FilterTypeSharedPreferences)
-                , null);
-        return getFilterTypeFromString(filter);
-    }
-
-    protected void writeFilterTypeToSharedPreferences(FilterType ft){
-        SharedPreferences pref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(
-                this.getString(R.string.Key_FilterTypeSharedPreferences)
-                , getStringFromFilterType(ft));
-        editor.commit();
-    }
-
-    //
-    // because I can't use an enum within SharedPreferences....
-    //
-    private String getStringFromFilterType(FilterType ft){
-        switch(ft){
-            case Popular:
-                return this.getString(R.string.FilterTypeForSharedPreferences_Popular);
-            case TopRated:
-                return this.getString(R.string.FilterTypeForSharedPreferences_TopRated);
-        }
-
-        return null;
-    }
-
-    private FilterType getFilterTypeFromString(String s){
-        if (s == this.getString(R.string.FilterTypeForSharedPreferences_TopRated)){
-            return FilterType.TopRated;
-        }
-
-        // this will always be the default
-        return FilterType.Popular;
     }
 }
