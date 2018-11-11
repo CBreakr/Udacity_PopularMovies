@@ -295,6 +295,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
     }
 
+    //
+    // from:
+    // https://stackoverflow.com/questions/574195/android-youtube-app-play-video-intent
+    //
     private View inflateTrailerViewAndFill(final MovieTrailer trailer){
         View view = mInflater.inflate(R.layout.trailer_list_item, mTrailersLayout, false);
 
