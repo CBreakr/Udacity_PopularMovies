@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     private void disconnectPotentialViewModelObserver(){
         if(mViewModel != null && mViewModel.getMovies().hasObservers()){
             mViewModel.getMovies().removeObservers(this);
+            mViewModel = null;
         }
     }
 
@@ -257,9 +258,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
         @Override protected void onPostExecute(Boolean internet) {
             if(internet){
-//                new FetchMoviesTask(mFilterToUse).execute();
                 final MovieAPIViewModel model =
-                        ViewModelProviders.of(MainActivity.this).get(MovieAPIViewModel.class);
+                        ViewModelProviders.of(MainActivity.this)
+                                .get(
+                                        FilterUtils.getCurrentFilterTypeAsString(MainActivity.this)
+                                        , MovieAPIViewModel.class);
                 model.getData().observe(MainActivity.this, new Observer<List<MovieInfo>>() {
                     @Override
                     public void onChanged(@Nullable List<MovieInfo> movieEntries) {

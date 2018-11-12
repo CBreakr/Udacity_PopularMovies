@@ -33,16 +33,28 @@ public class FilterUtils {
     }
 
     public static boolean isFavoriteMode(Context context){
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        String filter = pref.getString(
-                        context.getString(R.string.Key_FilterTypeSharedPreferences)
-                        , null);
+        String filter = getFilterTypeSharedPreferencesString(context);
 
         if(filter == getStringFromFilterType(FilterType.Favorite, context)){
             return true;
         }
 
         return false;
+    }
+
+    //
+    // public wrapper to have a better name
+    //
+    public static String getCurrentFilterTypeAsString(Context context){
+        return getFilterTypeSharedPreferencesString(context);
+    }
+
+    private static String getFilterTypeSharedPreferencesString(Context context){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        String filter = pref.getString(
+                context.getString(R.string.Key_FilterTypeSharedPreferences)
+                , null);
+        return filter;
     }
 
     private static void writeFilterTypeToSharedPreferences(FilterType ft, Context context){
@@ -71,10 +83,10 @@ public class FilterUtils {
     }
 
     private static FilterType getFilterTypeFromString(String s, Context context){
-        if (s == context.getString(R.string.FilterTypeForSharedPreferences_TopRated)){
+        if (s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_TopRated))){
             return FilterType.TopRated;
         }
-        else if(s == context.getString(R.string.FilterTypeForSharedPreferences_Favorite)){
+        else if(s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_Favorite))){
             return FilterType.Favorite;
         }
 

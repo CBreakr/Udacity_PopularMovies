@@ -32,14 +32,11 @@ public final class NetworkUtils {
 
     private static final String API_KEY = "api_key";
     private static final String API_LANGUAGE = "language";
-    private static final String API_SORT_BY = "sort_by";
     private static final String API_INCLUDE_ADULT = "include_adult";
     private static final String API_INCLUDE_VIDEO = "include_video";
     private static final String API_PAGE = "page";
 
     private static final String LANGUAGE_QUERY_VALUE_ENGLISH = "en-US";
-    private static final String SORT_BY_QUERY_VALUE_POPULARITY = "popularity.desc";
-    private static final String SORT_BY_QUERY_VALUE_TOP_RATED = "vote_average.desc";
     private static final String PAGE_QUERY_VALUE_DEFAULT = "1";
 
     /*
@@ -56,7 +53,6 @@ public final class NetworkUtils {
         Uri builtUri = Uri.parse(API_BASEURL_LIST + API_POPULAR_EXTENSION).buildUpon()
                 .appendQueryParameter(API_KEY, key)
                 .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
-                .appendQueryParameter(API_SORT_BY, SORT_BY_QUERY_VALUE_POPULARITY)
                 .appendQueryParameter(API_INCLUDE_ADULT, "false")
                 .appendQueryParameter(API_INCLUDE_VIDEO, "false")
                 .appendQueryParameter(API_PAGE, PAGE_QUERY_VALUE_DEFAULT)
@@ -69,13 +65,16 @@ public final class NetworkUtils {
         Uri builtUri = Uri.parse(API_BASEURL_LIST + API_TOPRATED_EXTENSION).buildUpon()
                 .appendQueryParameter(API_KEY, key)
                 .appendQueryParameter(API_LANGUAGE, LANGUAGE_QUERY_VALUE_ENGLISH)
-                .appendQueryParameter(API_SORT_BY, SORT_BY_QUERY_VALUE_TOP_RATED)
                 .appendQueryParameter(API_INCLUDE_ADULT, "false")
                 .appendQueryParameter(API_INCLUDE_VIDEO, "false")
                 .appendQueryParameter(API_PAGE, PAGE_QUERY_VALUE_DEFAULT)
                 .build();
 
-        return createURLFromUri(builtUri);
+        URL ret = createURLFromUri(builtUri);
+
+        Log.d(TAG, "URL for top rated: " + ret.toString());
+
+        return ret;
     }
 
     /*
