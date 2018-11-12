@@ -97,11 +97,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, LANDSCAPE_NumberOfColumns));
         }
 
+        setupAdapter();
+
+        showDataView();
+    }
+
+    protected void setupAdapter(){
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
         mRecyclerView.setHasFixedSize(true);
-
-        showDataView();
     }
 
     protected void showDataView(){
@@ -195,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        // set the list to null up front
+        setupAdapter();
 
         if (id == R.id.popular_sort) {
             FilterUtils.setFilterType(FilterUtils.FilterType.Popular, this);
