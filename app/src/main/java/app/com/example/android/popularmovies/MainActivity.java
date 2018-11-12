@@ -35,7 +35,7 @@ import app.com.example.android.popularmovies.ViewModel.MainViewModel;
 import app.com.example.android.popularmovies.ViewModel.MovieAPIViewModel;
 import app.com.example.android.popularmovies.ViewModel.MovieViewModel;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 

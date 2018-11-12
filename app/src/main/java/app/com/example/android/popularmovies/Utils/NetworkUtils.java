@@ -22,7 +22,7 @@ public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String API_BASEURL_LIST = "https://api.themoviedb.org/3/movie/";
+    private static final String API_BASEURL_LIST = "http://api.themoviedb.org/3/movie/";
 
     private static final String API_POPULAR_EXTENSION = "popular";
     private static final String API_TOPRATED_EXTENSION = "top_rated";

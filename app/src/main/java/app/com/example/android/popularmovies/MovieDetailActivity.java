@@ -1,7 +1,5 @@
 package app.com.example.android.popularmovies;
 
-import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -12,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -33,8 +30,6 @@ import app.com.example.android.popularmovies.Database.MovieInfo;
 import app.com.example.android.popularmovies.Database.MovieReview;
 import app.com.example.android.popularmovies.Database.MovieTrailer;
 import app.com.example.android.popularmovies.Utils.AppExecutors;
-import app.com.example.android.popularmovies.Utils.MovieRequestUtils;
-import app.com.example.android.popularmovies.ViewModel.MovieAPIViewModel;
 import app.com.example.android.popularmovies.ViewModel.MovieViewModel;
 import app.com.example.android.popularmovies.ViewModel.MovieViewModelFactory;
 import app.com.example.android.popularmovies.ViewModel.ReviewAPIViewModel;

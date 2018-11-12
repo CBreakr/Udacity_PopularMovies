@@ -4,10 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -16,15 +13,11 @@ import java.util.List;
 
 import app.com.example.android.popularmovies.Database.MovieInfo;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapterViewHolder> {
 
     private List<MovieInfo> mMovieList;
 
     private final MovieAdapterOnClickHandler mClickHandler;
-
-    public interface MovieAdapterOnClickHandler{
-        void onClick(MovieInfo movie);
-    }
 
     public MovieAdapter(MovieAdapterOnClickHandler clickHandler){
         mClickHandler = clickHandler;
@@ -39,28 +32,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return mMovieList;
     }
 
-    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        public final ImageView mPosterImageView;
-        public final TextView mErrorTitleDisplay;
-
-        public final Context context;
-
-        public MovieAdapterViewHolder(View view, Context param_context){
-            super(view);
-            mPosterImageView = view.findViewById(R.id.iv_poster_main);
-            mErrorTitleDisplay = view.findViewById(R.id.tv_error_title_display);
-            context = param_context;
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            MovieInfo movie = mMovieList.get(position);
-            mClickHandler.onClick(movie);
-        }
-    }
-
     //
     // RECYCLERVIEW ADAPTER
     //
@@ -73,7 +44,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         boolean attachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdToInflate, viewGroup, attachToParentImmediately);
-        return new MovieAdapterViewHolder(view, context);
+        return new MovieAdapterViewHolder(view, context, mMovieList, mClickHandler);
     }
 
     @Override

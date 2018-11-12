@@ -8,4 +8,104 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ErrorMessageStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="CaptionHeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LinearLayoutBaseStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="ImageViewBaseStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:contentDescription">@string/movie_picture_content_description</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ProgressBarStyle">
+        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_width">42dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="OverviewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+    </style>
+
+    <style name="ReplacementTitleStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
+    <style name="LinearLayoutRightStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="MovieTitleBaseStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="FavoriteButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="RatingCaptionStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RatingStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <style name="ReleaseLabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ReleaseBaseStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

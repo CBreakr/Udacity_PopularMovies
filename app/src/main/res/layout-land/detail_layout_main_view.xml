@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayoutBaseStyle"
+    >
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_poster_detail"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            style="@style/ImageViewBaseStyle"
+            />
+
+        <!-- RIGHT SIDE LAYOUT -->
+        <include layout="@layout/detail_layout_right"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <TextView
+        android:text="@string/overview_caption"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        style="@style/CaptionHeaderStyle"
+        />
+
+    <TextView
+        android:id="@+id/tv_overview"
+        style="@style/OverviewStyle"
+        />
+
+    <!-- ERROR MESSAGES -->
+
+    <TextView
+        android:id="@+id/tv_no_internet_message_display"
+        android:text="@string/no_internet_error_message"
+        style="@style/ErrorMessageStyle"
+        />
+
+    <TextView
+        android:id="@+id/tv_error_message_display"
+        android:text="@string/individual_movie_error_message"
+        style="@style/ErrorMessageStyle"
+        />
+
+    <!-- TRAILERS -->
+
+    <include layout="@layout/trailers_layout"/>
+
+    <!-- REVIEWS -->
+
+    <include layout="@layout/reviews_layout"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

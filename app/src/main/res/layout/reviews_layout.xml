@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_ReviewsLayout"
+    style="@style/LinearLayoutBaseStyle"
+    >
+
+    <TextView
+        android:text="@string/review_caption"
+        style="@style/CaptionHeaderStyle"
+        />
+
+</android.support.v7.widget.LinearLayoutCompat>
