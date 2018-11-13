@@ -83,10 +83,10 @@ public class FilterUtils {
     }
 
     private static FilterType getFilterTypeFromString(String s, Context context){
-        if (s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_TopRated))){
+        if (s != null && s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_TopRated))){
             return FilterType.TopRated;
         }
-        else if(s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_Favorite))){
+        else if(s != null && s.equalsIgnoreCase(context.getString(R.string.FilterTypeForSharedPreferences_Favorite))){
             return FilterType.Favorite;
         }
 
